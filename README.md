@@ -8,6 +8,7 @@ A Laravel package for sending OneSignal push notifications with a simple client 
 - Config publishing (`onesignal-config`)
 - Container binding (`onesignal`)
 - Facade (`OneSignal`) and helper (`onesignal()`)
+- Send to all users, a single user, or multiple users
 - Testbench-based package tests
 
 ## Requirements
@@ -34,17 +35,38 @@ Set your environment variables:
 ```env
 ONESIGNAL_APP_ID=your_app_id
 ONESIGNAL_REST_API_KEY=your_rest_api_key
+ONESIGNAL_USER_AUTH_KEY=optional_user_auth_key
 ONESIGNAL_API_URL=https://onesignal.com/api/v1
+ONESIGNAL_TIMEOUT=10
 ```
 
 ## Usage
 
-### Using the helper
+### Send to all users
 
 ```php
-$response = onesignal()->sendToUsers(
-    ['player-id-1'],
-    ['en' => 'Hello from Laravel package'],
+onesignal()->sendToAll(
+    ['en' => 'Hello everyone'],
+    ['en' => 'Announcement'],
+    ['source' => 'app']
+);
+```
+
+### Send to one user
+
+```php
+onesignal()->sendToUser(
+    'player-id-123',
+    ['en' => 'Hello user']
+);
+```
+
+### Send to many users
+
+```php
+onesignal()->sendToUsers(
+    ['player-id-1', 'player-id-2'],
+    ['en' => 'Hello group'],
     ['en' => 'Greeting'],
     ['source' => 'app']
 );
@@ -55,7 +77,7 @@ $response = onesignal()->sendToUsers(
 ```php
 use Jowxidea\Onesignal\Facades\OneSignal;
 
-$response = OneSignal::sendToSegments(
+OneSignal::sendToSegments(
     ['Subscribed Users'],
     ['en' => 'New update is available'],
     ['en' => 'Update']
@@ -65,11 +87,15 @@ $response = OneSignal::sendToSegments(
 ### Sending a custom payload
 
 ```php
-$response = onesignal()->send([
+onesignal()->send([
     'included_segments' => ['All'],
     'contents' => ['en' => 'Custom payload message'],
 ]);
 ```
+
+### Legacy compatible methods
+
+The client keeps compatibility methods such as `sendNotificationToAll`, `sendNotificationToUser`, `sendNotificationToExternalUser`, and `sendNotificationUsingTags` while using Laravel HTTP client internally.
 
 ## Testing
 

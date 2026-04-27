@@ -17,10 +17,12 @@ class OneSignalServiceProvider extends ServiceProvider
             $config = (array) $app['config']->get('onesingle', []);
 
             return new OneSignalClient(
-                appId: (string) ($config['app_id'] ?? ''),
-                restApiKey: (string) ($config['rest_api_key'] ?? ''),
-                apiUrl: (string) ($config['api_url'] ?? 'https://onesignal.com/api/v1'),
-                http: $app->make(Factory::class)
+                (string) ($config['app_id'] ?? ''),
+                (string) ($config['rest_api_key'] ?? ''),
+                (string) ($config['api_url'] ?? 'https://onesignal.com/api/v1'),
+                $app->make(Factory::class),
+                (string) ($config['user_auth_key'] ?? ''),
+                (int) ($config['timeout'] ?? 10)
             );
         });
 
@@ -29,8 +31,6 @@ class OneSignalServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
-
         $this->publishes([
             __DIR__ . '/../config/onesingle.php' => config_path('onesingle.php'),
         ], 'onesignal-config');
