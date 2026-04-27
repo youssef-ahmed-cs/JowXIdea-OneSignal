@@ -1,0 +1,18 @@
+{
+    "name": "jowxidea/onesignal",
+    "description": "A lightweight and easy-to-use Laravel package for integrating OneSignal push notifications into your application.",
+    "type": "librry",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Jowxidea\\Onesignal\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "yes"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
