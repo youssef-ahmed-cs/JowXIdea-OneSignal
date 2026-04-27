@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  php-ci:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.2", "8.3"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
+      - name: Install dependencies
+        run: |
+          if [ -f composer.lock ]; then
+            composer install --no-interaction --prefer-dist --no-progress
+          else
+            composer update --no-interaction --prefer-dist --no-progress
+          fi
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Lint PHP files in src
+        run: |
+          files=$(find src -type f -name '*.php' 2>/dev/null)
+          if [ -z "$files" ]; then
+            echo "No PHP files found in src/, skipping lint."
+            exit 0
+          fi
+
+          while IFS= read -r file; do
+            php -l "$file"
+          done <<< "$files"
+
+      - name: Run tests (if defined)
+        run: |
+          if composer run-script --list | grep -qE '^\s*test\b'; then
+            composer test
+          else
+            echo "No composer 'test' script found, skipping tests."
+          fi
