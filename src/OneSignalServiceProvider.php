@@ -29,9 +29,10 @@ class OneSignalServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+
         $this->publishes([
             __DIR__ . '/../config/onesingle.php' => config_path('onesingle.php'),
         ], 'onesignal-config');
     }
 }
-

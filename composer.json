@@ -49,6 +49,6 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --colors=always"
+        "test": "@php vendor/bin/phpunit --colors=always"
     }
 }

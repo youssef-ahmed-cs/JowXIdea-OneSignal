@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Jowxidea\\Onesignal\\Tests\\OneSignalClientTest::test_send_to_users_posts_notification_payload":0.269,"Jowxidea\\Onesignal\\Tests\\ServiceProviderTest::test_client_is_bound_in_container":0.003,"Jowxidea\\Onesignal\\Tests\\ServiceProviderTest::test_helper_returns_client_instance":0.001}}

@@ -21,13 +21,6 @@
         </include>
     </source>
 
-    <coverage>
-        <report>
-            <clover outputFile="build/logs/clover.xml"/>
-            <cobertura outputFile="build/logs/cobertura.xml"/>
-        </report>
-    </coverage>
-
     <logging>
         <junit outputFile="build/logs/junit.xml"/>
     </logging>
@@ -36,4 +29,3 @@
         <env name="APP_ENV" value="testing"/>
     </php>
 </phpunit>
-
