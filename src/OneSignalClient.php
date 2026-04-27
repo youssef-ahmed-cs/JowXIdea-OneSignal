@@ -451,13 +451,18 @@ class OneSignalClient
     {
         $json = $response->json();
 
-        if (is_array($json)) {
-            return $json;
-        }
+        $result = is_array($json)
+            ? $json
+            : ['body' => $response->body()];
 
-        return [
+        $result['_response'] = [
             'status' => $response->status(),
-            'body' => $response->body(),
+            'ok' => $response->ok(),
+            'successful' => $response->successful(),
+            'redirect' => $response->redirect(),
+            'headers' => $response->headers(),
         ];
+
+        return $result;
     }
 }

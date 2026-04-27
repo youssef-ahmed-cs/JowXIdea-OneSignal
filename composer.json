@@ -1,6 +1,6 @@
 {
     "name": "jowxidea/onesignal",
-    "description": "A lightweight and easy-to-use Laravel package for integrating OneSignal push notifications into your application.",
+    "description": "A Laravel package for sending push notifications using OneSignal.",
     "type": "library",
     "license": "MIT",
     "keywords": [
@@ -9,7 +9,9 @@
         "notifications",
         "push",
         "notification-service",
-        "laravel - flutter - front"
+        "laravel",
+        "flutter",
+        "front"
     ],
     "autoload": {
         "psr-4": {

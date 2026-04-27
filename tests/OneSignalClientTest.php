@@ -94,6 +94,43 @@ class OneSignalClientTest extends TestCase
         });
     }
 
+    public function test_response_metadata_is_included_for_json_calls(): void
+    {
+        Http::fake([
+            'https://onesignal.com/api/v1/notifications' => Http::response([
+                'id' => 'notification-id-meta',
+            ], 200, ['X-Test' => 'meta-header']),
+        ]);
+
+        $client = $this->app->make(OneSignalClient::class);
+
+        $response = $client->sendToAll(
+            ['en' => 'Hello metadata'],
+            ['en' => 'Metadata'],
+            ['source' => 'phpunit']
+        );
+
+        $this->assertSame('notification-id-meta', $response['id']);
+        $this->assertSame(200, $response['_response']['status']);
+        $this->assertTrue($response['_response']['successful']);
+        $this->assertSame('meta-header', $response['_response']['headers']['X-Test'][0]);
+    }
+
+    public function test_response_metadata_is_included_for_non_json_calls(): void
+    {
+        Http::fake([
+            'https://onesignal.com/api/v1/players/csv_export' => Http::response('csv-content', 200, ['Content-Type' => 'text/csv']),
+        ]);
+
+        $client = $this->app->make(OneSignalClient::class);
+
+        $response = $client->requestPlayersCSV();
+
+        $this->assertSame('csv-content', $response['body']);
+        $this->assertSame(200, $response['_response']['status']);
+        $this->assertSame('text/csv', $response['_response']['headers']['Content-Type'][0]);
+    }
+
     public function test_legacy_send_notification_to_all_still_works(): void
     {
         Http::fake([
